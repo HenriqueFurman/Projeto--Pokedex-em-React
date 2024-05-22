@@ -6,12 +6,12 @@ import Filters from './components/Filters';
 import Footer from './components/Footer';
 import SearchBar from './components/SearchBar';
 import { fetchPokemons } from './services/pokeApi';
-import './css/Filters.css';
-import './css/Footer.css';
-import './css/Header.css';
-import './css/PokemonCard.css';
-import './css/PokemonList.css';
-import './css/SearchBar.css';
+import './components/css/Filters.css';
+import './components/css/Footer.css';
+import './components/css/Header.css';
+import './components/css/PokemonCard.css';
+import './components/css/PokemonList.css';
+import './components/css/SearchBar.css';
 
 function App() {
   const [pokemons, setPokemons] = useState([]);
