@@ -18,12 +18,16 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedGeneration, setSelectedGeneration] = useState(null); // Adicionado para filtrar por geração
-  const [loading, setLoading] = useState(true); // Estado de carregamento
+  const [loading, setLoading] = useState(true);
+  const [availableGenerations, setAvailableGenerations] = useState([]); // Gerações disponíveis
 
   useEffect(() => {
     fetchPokemons().then(data => {
       setPokemons(data);
       setLoading(false); // Desativar o estado de carregamento após os dados serem carregados
+
+      const generations = [...new Set(data.map(pokemon => pokemon.generation))];
+      setAvailableGenerations(generations.sort((a, b) => a - b));
     });
   }, []);
 
@@ -42,33 +46,26 @@ function App() {
     return ranges[gen] || [];
   };
 
-// const filteredPokemons = pokemons.filter(pokemon =>
-//    pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-//    (selectedTypes.length === 0 || selectedTypes.some(type => pokemon.types.includes(type)))
-//  );
 
+  const filteredPokemons = pokemons.filter(pokemon => {
+    const matchesSearchTerm = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = selectedTypes.length === 0 || selectedTypes.some(type => pokemon.types.includes(type));
+    const [start, end] = getGenerationRange(selectedGeneration);
+    const matchesGeneration = selectedGeneration === null || (pokemon.id >= start && pokemon.id <= end);
 
-const filteredPokemons = pokemons.filter(pokemon => {
-  const matchesSearchTerm = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
-  const matchesType = selectedTypes.length === 0 || selectedTypes.some(type => pokemon.types.includes(type));
-  const [start, end] = getGenerationRange(selectedGeneration);
-  const matchesGeneration = selectedGeneration === null || (pokemon.id >= start && pokemon.id <= end);
-
-  return matchesSearchTerm && matchesType && matchesGeneration;
-});
-
-
-
+    return matchesSearchTerm && matchesType && matchesGeneration;
+  });
 
   return (
     <div className="App">
-      <Header setSearchTerm={setSearchTerm} setSelectedGeneration={setSelectedGeneration} />
+      <Header setSearchTerm={setSearchTerm} setSelectedGeneration={setSelectedGeneration} availableGenerations={availableGenerations} />
       <Filters selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes} />
       {loading ? <p>Loading...</p> : <Pokedex pokemons={filteredPokemons} />}
       <Footer />
     </div>
   );
 }
+
 
 
 export default App;
