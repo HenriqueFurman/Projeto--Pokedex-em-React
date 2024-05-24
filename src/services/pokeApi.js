@@ -1,5 +1,5 @@
 export const fetchPokemons = async () => {
-  const pokemonCount = 650; // Ajuste o número conforme necessário
+  const pokemonCount = 493; // Ajuste o número conforme necessário
   const pokemons = [];
   
   const getGeneration = (id) => {
