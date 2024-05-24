@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { getGeneration } from '../services/pokeApi';
 
-//altera a cor Card onde esta o pokemon em relaçao ao Primeiro tipo
 const colors = {
     normal: '#B7B7A8',
     fire: '#FF4422',
@@ -22,23 +22,39 @@ const colors = {
     fairy: '#F1A8F1',
 };
 
-// Extraindo os tipos principais
-const mainTypes = Object.keys(colors);
-
 const PokemonCard = ({ pokemon }) => {
     const { id, name, types, img } = pokemon;
     const primaryType = types[0];
-    const color = colors[primaryType] || '#FFF'; // Definindo a cor com base no tipo primário
+    const color = colors[primaryType] || '#FFF';
+
+    const [isHovered, setIsHovered] = useState(false);
 
     return (
-        <div className="pokemon" style={{ backgroundColor: color }}>
-            <div className="imgContainer">
+        <div
+            className="pokemon"
+            style={{ backgroundColor: color }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <div className="imgContainer" style={{ display: isHovered ? 'none' : 'block' }}>
                 <img src={img} alt={name} />
             </div>
             <div className="info">
-                <span className="number">#{id.toString().padStart(3, '0')}</span>
-                <h3 className="name">{name}</h3>
-                <small className="type">Type: {types.map(type => <span key={type}>{type}</span>)}</small>
+                {!isHovered && (
+                    <React.Fragment>
+                        <span className="number">#{id.toString().padStart(3, '0')}</span>
+                        <h3 className="name">{name}</h3>
+                    </React.Fragment>
+                )}
+                {isHovered && (
+                    <div>
+                        <span>Pokedex: {id.toString().padStart(3, '0')}</span>
+                        <br />
+                        <span>Generation: {getGeneration(id)}</span>
+                        <br />
+                        <span>Type: {types.join(', ')}</span>
+                    </div>
+                )}
             </div>
         </div>
     );
