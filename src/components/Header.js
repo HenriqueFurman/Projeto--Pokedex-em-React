@@ -2,11 +2,9 @@ import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 
-const Header = ({ setSearchTerm, setSelectedGeneration, availableGenerations }) => {
+const Header = ({ setSearchTerm, setSelectedGeneration, availableGenerations, toggleSidebar }) => {
   return (
     <header>
-
-
       <div className="search-container">
         <IconButton
           size="large"
@@ -14,8 +12,9 @@ const Header = ({ setSearchTerm, setSelectedGeneration, availableGenerations }) 
           color="inherit"
           aria-label="menu"
           sx={{ mr: 2 }}
+          onClick={toggleSidebar} // Chama a função de toggle
         >
-        <MenuIcon />
+          <MenuIcon />
         </IconButton>
         <form className="search-form" onSubmit={e => e.preventDefault()}>
           <div className="search-input-container">

@@ -5,6 +5,7 @@ import Pokedex from './components/Pokedex';
 import Filters from './components/Filters';
 import Footer from './components/Footer';
 import SearchBar from './components/SearchBar';
+import Sidebar from './components/Sidebar';
 import { fetchPokemons } from './services/pokeApi';
 import './components/css/Filters.css';
 import './components/css/Footer.css';
@@ -12,6 +13,9 @@ import './components/css/Header.css';
 import './components/css/PokemonCard.css';
 import './components/css/PokemonList.css';
 import './components/css/SearchBar.css';
+import './components/css/Sidebar.css';
+
+
 
 function App() {
   const [pokemons, setPokemons] = useState([]);
@@ -20,6 +24,7 @@ function App() {
   const [selectedGeneration, setSelectedGeneration] = useState(null); // Adicionado para filtrar por geração
   const [loading, setLoading] = useState(true);
   const [availableGenerations, setAvailableGenerations] = useState([]); // Gerações disponíveis
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Estado do sidebar
 
   useEffect(() => {
     fetchPokemons().then(data => {
@@ -58,7 +63,13 @@ function App() {
 
   return (
     <div className="App">
-      <Header setSearchTerm={setSearchTerm} setSelectedGeneration={setSelectedGeneration} availableGenerations={availableGenerations} />
+      <Header 
+        setSearchTerm={setSearchTerm} 
+        setSelectedGeneration={setSelectedGeneration} 
+        availableGenerations={availableGenerations} 
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} // Passar função de toggle para o Header
+      />
+      <Sidebar isOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} /> {/* Sidebar */}
       <Filters selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes} />
       {loading ? <p>Loading...</p> : <Pokedex pokemons={filteredPokemons} />}
       <Footer />
