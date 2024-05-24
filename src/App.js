@@ -21,15 +21,15 @@ function App() {
   const [pokemons, setPokemons] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTypes, setSelectedTypes] = useState([]);
-  const [selectedGeneration, setSelectedGeneration] = useState(null); // Adicionado para filtrar por geração
+  const [selectedGeneration, setSelectedGeneration] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [availableGenerations, setAvailableGenerations] = useState([]); // Gerações disponíveis
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Estado do sidebar
+  const [availableGenerations, setAvailableGenerations] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchPokemons().then(data => {
       setPokemons(data);
-      setLoading(false); // Desativar o estado de carregamento após os dados serem carregados
+      setLoading(false);
 
       const generations = [...new Set(data.map(pokemon => pokemon.generation))];
       setAvailableGenerations(generations.sort((a, b) => a - b));
@@ -51,6 +51,11 @@ function App() {
     return ranges[gen] || [];
   };
 
+  const toggleType = (type) => {
+    setSelectedTypes((prevTypes) => 
+      prevTypes.includes(type) ? prevTypes.filter(t => t !== type) : [...prevTypes, type]
+    );
+  };
 
   const filteredPokemons = pokemons.filter(pokemon => {
     const matchesSearchTerm = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -61,22 +66,28 @@ function App() {
     return matchesSearchTerm && matchesType && matchesGeneration;
   });
 
+  const pokemonTypes = [...new Set(pokemons.flatMap(pokemon => pokemon.types))];
+
   return (
     <div className="App">
       <Header 
         setSearchTerm={setSearchTerm} 
         setSelectedGeneration={setSelectedGeneration} 
         availableGenerations={availableGenerations} 
-        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} // Passar função de toggle para o Header
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
       />
-      <Sidebar isOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} /> {/* Sidebar */}
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        closeSidebar={() => setIsSidebarOpen(false)} 
+        types={pokemonTypes} 
+        selectedTypes={selectedTypes} 
+        toggleType={toggleType} // Passando a função toggleType corretamente
+      />
       <Filters selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes} />
       {loading ? <p>Loading...</p> : <Pokedex pokemons={filteredPokemons} />}
       <Footer />
     </div>
   );
 }
-
-
 
 export default App;

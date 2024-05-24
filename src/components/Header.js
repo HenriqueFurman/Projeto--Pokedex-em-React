@@ -11,8 +11,7 @@ const Header = ({ setSearchTerm, setSelectedGeneration, availableGenerations, to
           edge="start"
           color="inherit"
           aria-label="menu"
-          sx={{ mr: 2 }}
-          onClick={toggleSidebar} // Chama a função de toggle
+          onClick={toggleSidebar} // Adicionado onClick para abrir o sidebar
         >
           <MenuIcon />
         </IconButton>

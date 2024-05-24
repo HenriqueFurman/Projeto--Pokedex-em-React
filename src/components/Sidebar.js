@@ -2,16 +2,25 @@
 import React from 'react';
 import './css/Sidebar.css';
 
-const Sidebar = ({ isOpen, closeSidebar }) => {
+const Sidebar = ({ isOpen, closeSidebar, types, selectedTypes, toggleType }) => {
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <button onClick={closeSidebar} className="close-btn">Close</button>
       <nav>
-        <ul>
-          <li><a href="/">Início</a></li>
-          <li><a href="/Perfil">Login/Cadastrar-se</a></li>
-          {/* Adicione mais itens do menu conforme necessário */}
-        </ul>
+        <h3>Filtrar por Tipo</h3>
+        <div className="type-filters">
+          {types.map(type => (
+            <div key={type} className="type-filter">
+              <input
+                type="checkbox"
+                id={type}
+                checked={selectedTypes.includes(type)}
+                onChange={() => toggleType(type)}
+              />
+              <label htmlFor={type}>{type}</label>
+            </div>
+          ))}
+        </div>
       </nav>
     </div>
   );
