@@ -1,4 +1,6 @@
-/* components/css/Sidebar.css */
+/* ============================== */
+/* Estilos para o Caixa de Sidebar ou abalateral */
+/* ============================== */
 .sidebar {
   position: fixed;                        /* Fixa a sidebar na posição especificada na janela */
   top: 0;                                 /* Alinha a sidebar ao topo da janela */

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { getGeneration } from '../services/pokeApi';
+import { useNavigate } from 'react-router-dom'; // Substitua useHistory por useNavigate
+import '../components/css/PokemonCard.css'; // Corrija o caminho da importação do CSS
 
 const colors = {
     normal: '#B7B7A8',
@@ -23,37 +24,35 @@ const colors = {
 };
 
 const PokemonCard = ({ pokemon }) => {
-    const { id, name, types, img } = pokemon;
-    const primaryType = types[0];
+    const [isHovered, setIsHovered] = useState(false);
+    const navigate = useNavigate(); // Use useNavigate em vez de useHistory
+
+    const handleClick = () => {
+        navigate(`/pokemon/${pokemon.id}`);
+    };
+
+    const primaryType = pokemon.types[0];
     const color = colors[primaryType] || '#FFF';
 
-    const [isHovered, setIsHovered] = useState(false);
-
     return (
-        <div
-            className="pokemon"
+        <div 
+            className="pokemon" 
             style={{ backgroundColor: color }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseOver={() => setIsHovered(true)}
+            onMouseOut={() => setIsHovered(false)}
+            onClick={handleClick}
         >
             <div className="imgContainer" style={{ display: isHovered ? 'none' : 'block' }}>
-                <img src={img} alt={name} />
+                <img src={pokemon.img} alt={pokemon.name} />
             </div>
             <div className="info">
-                {!isHovered && (
-                    <React.Fragment>
-                        <span className="number">#{id.toString().padStart(3, '0')}</span>
-                        <h3 className="name">{name}</h3>
-                    </React.Fragment>
-                )}
+                <span className="number" style={{ display: isHovered ? 'none' : 'block' }}>#{pokemon.id.toString().padStart(3, '0')}</span>
+                <h3 className="name">{pokemon.name}</h3>
                 {isHovered && (
-                    <div>
-                        <span>Pokedex: {id.toString().padStart(3, '0')}</span>
-                        <br />
-                        <span>Generation: {getGeneration(id)}</span>
-                        <br />
-                        <span>Type: {types.join(', ')}</span>
-                    </div>
+                    <small className="type">
+                        Generation: {pokemon.generation}<br />
+                        Type: {pokemon.types.join(', ')}
+                    </small>
                 )}
             </div>
         </div>

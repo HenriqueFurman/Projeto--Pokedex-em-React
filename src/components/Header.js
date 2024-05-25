@@ -43,7 +43,6 @@ const Header = ({ setSearchTerm, setSelectedGeneration, availableGenerations, to
                 ))}
               </div>
             </li>
-            <li><a href="/Perfil">Login/Cadastrar-se</a></li>
           </ul>
         </nav>
       </div>

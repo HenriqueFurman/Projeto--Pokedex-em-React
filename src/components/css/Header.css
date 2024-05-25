@@ -1,3 +1,6 @@
+/* ============================== */
+/* Estilos para o Cabeçario */
+/* ============================== */
 header {
     background-color: rgba(0, 0, 0, 0.7);
     color: #ffffff;
@@ -35,11 +38,9 @@ nav ul li a {
         margin: 10px 0;
     }
 }
-
-
-/* Estilos do suspenso */
 /* ============================== */
 /* Estilos para o menu suspenso */
+/* ============================== */
 .dropdown {
     position: relative;
     display: inline-block;

@@ -1,18 +1,30 @@
+/* ----------------- */
+// Funçoes do Card Pokemon
+/* ----------------- */
+
+
+// Função utilitária para capitalizar a primeira letra
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+// Função para determinar a geração do Pokémon
+const getGeneration = (id) => {
+  if (id <= 151) return 1;
+  if (id <= 251) return 2;
+  if (id <= 386) return 3;
+  if (id <= 493) return 4;
+  if (id <= 649) return 5;
+  if (id <= 721) return 6;
+  if (id <= 809) return 7;
+  if (id <= 898) return 8;
+  return 9;
+};
+
+// Função para buscar todos os Pokémons
 export const fetchPokemons = async () => {
-  const pokemonCount = 493; // Ajuste o número conforme necessário
+  const pokemonCount = 493;
   const pokemons = [];
-  
-  const getGeneration = (id) => {
-    if (id <= 151) return 1;
-    if (id <= 251) return 2;
-    if (id <= 386) return 3;
-    if (id <= 493) return 4;
-    if (id <= 649) return 5;
-    if (id <= 721) return 6;
-    if (id <= 809) return 7;
-    if (id <= 898) return 8;
-    return 9; // Exemplo para a geração 9
-  };
 
   for (let i = 1; i <= pokemonCount; i++) {
     const url = `https://pokeapi.co/api/v2/pokemon/${i}`;
@@ -21,10 +33,10 @@ export const fetchPokemons = async () => {
 
     const pokemon = {
       id: data.id,
-      name: data.name,
-      types: data.types.map(type => type.type.name),
+      name: capitalizeFirstLetter(data.name),
+      types: data.types.map(type => type.type.name),// Função para determinar a Cor do card do Pokémon
       img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.id}.png`,
-      generation: getGeneration(data.id) // Adiciona a geração
+      generation: getGeneration(data.id)
     };
 
     pokemons.push(pokemon);
@@ -33,14 +45,77 @@ export const fetchPokemons = async () => {
   return pokemons;
 };
 
-export const getGeneration = (id) => {
-    if (id <= 151) return 1;
-    if (id <= 251) return 2;
-    if (id <= 386) return 3;
-    if (id <= 493) return 4;
-    if (id <= 649) return 5;
-    if (id <= 721) return 6;
-    if (id <= 809) return 7;
-    if (id <= 898) return 8;
-    return 9; // Exemplo para a geração 9
+
+/* ----------------- */
+// Funçoes da Linha Evolução
+/* ----------------- */
+
+
+// Função para buscar a cadeia de evolução
+const fetchEvolutionChain = async (url) => {
+  const resp = await fetch(url);
+  const data = await resp.json();
+  return data.chain;
+};
+
+// Função para buscar os tipos de um Pokémon
+const fetchPokemonTypes = async (speciesUrl) => {
+  const speciesResp = await fetch(speciesUrl);
+  const speciesData = await speciesResp.json();
+  const pokemonResp = await fetch(speciesData.varieties[0].pokemon.url);
+  const pokemonData = await pokemonResp.json();
+  return pokemonData.types.map(type => capitalizeFirstLetter(type.type.name));
+};
+
+// Função para obter as evoluções
+const getEvolutions = async (chain) => {
+  const evolutions = [];
+  const traverseEvolutions = async (node) => {
+    if (node) {
+      const types = await fetchPokemonTypes(node.species.url);
+      evolutions.push({
+        speciesName: capitalizeFirstLetter(node.species.name),
+        speciesUrl: node.species.url,
+        types: types,
+        evolvesTo: node.evolves_to.map(evo => ({
+          speciesName: capitalizeFirstLetter(evo.species.name),
+          speciesUrl: evo.species.url,
+          minLevel: evo.evolution_details[0]?.min_level || "N/A"
+        }))
+      });
+      for (let evo of node.evolves_to) {
+        await traverseEvolutions(evo);
+      }
+    }
+  };
+  await traverseEvolutions(chain);
+  return evolutions;
+};
+
+// Função para buscar um Pokémon pelo ID
+export const fetchPokemonById = async (id) => {
+  const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+  const resp = await fetch(url);
+  const data = await resp.json();
+
+  const speciesUrl = data.species.url;
+  const speciesResp = await fetch(speciesUrl);
+  const speciesData = await speciesResp.json();
+  const evolutionChainUrl = speciesData.evolution_chain.url;
+  const evolutionChain = await fetchEvolutionChain(evolutionChainUrl);
+  const evolutions = await getEvolutions(evolutionChain);
+
+  const pokemon = {
+    id: data.id,
+    name: capitalizeFirstLetter(data.name),
+    types: data.types.map(type => capitalizeFirstLetter(type.type.name)),
+    img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.id}.png`,
+    generation: getGeneration(data.id),
+    height: data.height,
+    weight: data.weight,
+    abilities: data.abilities.map(ability => capitalizeFirstLetter(ability.ability.name)),
+    evolutions: evolutions
+  };
+
+  return pokemon;
 };

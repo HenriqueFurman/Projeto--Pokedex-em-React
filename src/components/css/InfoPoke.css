@@ -1,0 +1,87 @@
+.pokemon-details {
+  text-align: center;
+  margin: 20px;
+  margin-top: 80px;
+  border: 2px solid #218b13; /* Marrom */
+  border-radius: 20px; /* Bordas arredondadas */
+}
+
+.pokemon-details .images {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+}
+
+.pokemon-details .image-container {
+  text-align: center;
+  border: 2px solid #8B4513; /* Marrom */
+  border-radius: 20px; /* Bordas arredondadas */}
+
+.pokemon-details .image-container img {
+  width: 180px;
+}
+
+.pokemon-details .effectiveness,
+.pokemon-details .evolution-line {
+  margin-top: 20px;
+}
+
+.evolution-line .evolution-cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.EvoCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border: 2px solid #8B4513; /* Marrom */
+  border-radius: 20px; /* Bordas arredondadas */
+  padding: 10px; /* Espaçamento interno */
+  background-color: #D2B48C; /* Cor de fundo marrom claro */
+}
+
+.EvoCard img {
+  width: 180px;
+  height: 180px;
+}
+
+.EvoCard div {
+  text-align: center;
+}
+
+/* ------------- */
+/* Cor de Link do card ajustado */
+/* ------------- */
+.EvoCard a:link {
+  color: black;
+  text-decoration: none;
+}
+
+.EvoCard a:visited {
+  color: black;
+  text-decoration: none;
+}
+
+.EvoCard a:hover {
+  color: black;
+  text-decoration: none;
+}
+
+.EvoCard a:active {
+  color: black;
+  text-decoration: none;
+}
+
+.iconStyle {
+  display: flexbox;
+  font-size: 40px;
+  margin-right: 10px;
+}
+
+.nameStyle {
+  font-size: 40px;
+  margin-right: 10px;
+}

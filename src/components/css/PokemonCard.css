@@ -1,3 +1,16 @@
+/* ============================== */
+/* Estilos para o Card do Pokemon */
+/* ============================== */
+.pokeContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 1200px;
+    margin-top: 80px;
+}
+
 .pokemon {
     background-color: #eee;
     border-radius: 10px;
