@@ -1,31 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Substitua useHistory por useNavigate
-import '../components/css/PokemonCard.css'; // Corrija o caminho da importação do CSS
-
-const colors = {
-    normal: '#B7B7A8',
-    fire: '#FF4422',
-    water: '#51A8FF',
-    electric: '#FFD451',
-    grass: '#8BD46E',
-    ice: '#7CD3FF',
-    fighting: '#C56E60',
-    poison: '#B76EA8',
-    ground: '#E2C56E',
-    flying:'#9AA8FF',
-    psychic: '#FF6EA8',
-    bug: '#B7C543',
-    rock: '#C5B67C',
-    ghost: '#7D7DC5',
-    dragon:'#8B7DF1',
-    dark: '#8B6E60',
-    steel: '#B7B7C5',
-    fairy: '#F1A8F1',
-};
+import { useNavigate } from 'react-router-dom';
+import '../components/css/PokemonCard.css';
+import { colors } from '../services/pokeApi.js';
 
 const PokemonCard = ({ pokemon }) => {
     const [isHovered, setIsHovered] = useState(false);
-    const navigate = useNavigate(); // Use useNavigate em vez de useHistory
+    const navigate = useNavigate();
 
     const handleClick = () => {
         navigate(`/pokemon/${pokemon.id}`);
@@ -59,4 +39,18 @@ const PokemonCard = ({ pokemon }) => {
     );
 };
 
-export default PokemonCard;
+export const Pokedex = ({ pokemons }) => {
+    const navigate = useNavigate();
+
+    const handleClick = (pokemonId) => {
+        navigate(`/pokemon/${pokemonId}`);
+    };
+
+    return (
+      <div className="pokeContainer">
+        {pokemons.map(pokemon => (
+          <PokemonCard key={pokemon.id} pokemon={pokemon} onClick={() => handleClick(pokemon.id)} />
+        ))}
+      </div>
+    );
+};

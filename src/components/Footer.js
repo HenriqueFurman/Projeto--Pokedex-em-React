@@ -28,18 +28,6 @@ const Footer = () => {
 
         <ul className="footer-list">
           <li>
-            <h3>Navegue</h3>
-          </li>
-          <li>
-            <Link to="/" className="footer-link">Início</Link>
-          </li>
-          <li>
-            <Link to="/profile" className="footer-link">Perfil</Link>
-          </li>
-        </ul>
-
-        <ul className="footer-list">
-          <li>
             <h3>Contatos</h3>
           </li>
           <li>

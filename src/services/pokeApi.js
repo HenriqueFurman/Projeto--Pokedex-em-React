@@ -2,6 +2,26 @@
 // Funçoes do Card Pokemon
 /* ----------------- */
 
+export const colors = {  // Adiciona a exportação do objeto colors
+  normal: '#B7B7A8',
+  fire: '#FF4422',
+  water: '#51A8FF',
+  electric: '#FFD451',
+  grass: '#8BD46E',
+  ice: '#7CD3FF',
+  fighting: '#C56E60',
+  poison: '#B76EA8',
+  ground: '#E2C56E',
+  flying: '#9AA8FF',
+  psychic: '#FF6EA8',
+  bug: '#B7C543',
+  rock: '#C5B67C',
+  ghost: '#7D7DC5',
+  dragon: '#8B7DF1',
+  dark: '#8B6E60',
+  steel: '#B7B7C5',
+  fairy: '#F1A8F1',
+};
 
 // Função utilitária para capitalizar a primeira letra
 const capitalizeFirstLetter = (string) => {
@@ -34,7 +54,7 @@ export const fetchPokemons = async () => {
     const pokemon = {
       id: data.id,
       name: capitalizeFirstLetter(data.name),
-      types: data.types.map(type => type.type.name),// Função para determinar a Cor do card do Pokémon
+      types: data.types.map(type => type.type.name),
       img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.id}.png`,
       generation: getGeneration(data.id)
     };
@@ -49,7 +69,6 @@ export const fetchPokemons = async () => {
 /* ----------------- */
 // Funçoes da Linha Evolução
 /* ----------------- */
-
 
 // Função para buscar a cadeia de evolução
 const fetchEvolutionChain = async (url) => {

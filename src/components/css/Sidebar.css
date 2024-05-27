@@ -47,21 +47,21 @@
 .type-filters {
   margin-top: 20px;                      /* Adiciona uma margem superior de 20px */
   display: flex;                         /* Usa o layout flexbox */
-  flex-direction: column;          /* Organiza os elementos em uma coluna */
-  padding-left: 25%;              /* Adiciona um preenchimento à esquerda de 15px */
+  flex-direction: column;                /* Organiza os elementos em uma coluna */
+  padding-left: 25%;                     /* Adiciona um preenchimento à esquerda de 15px */
 }
 
 .type-filters span {
-  font-weight: 700; /* Define o peso da fonte como negrito */
-  font-size: 22px; /* Define o tamanho da fonte como 22px */
+  font-weight: 700;                      /* Define o peso da fonte como negrito */
+  font-size: 22px;                       /* Define o tamanho da fonte como 22px */
 }
 
 .type-filter {
-  margin-bottom: 10px; /* Adiciona uma margem inferior de 10px */
-  display: flex; /* Usa o layout flexbox */
-  gap: 20px; /* Adiciona um espaçamento de 10px entre os elementos */
+  margin-bottom: 10px;                   /* Adiciona uma margem inferior de 10px */
+  display: flex;                         /* Usa o layout flexbox */
+  gap: 20px;                             /* Adiciona um espaçamento de 10px entre os elementos */
 }
 
 .type-filter label {
-  cursor: pointer; /* Muda o cursor para um ponteiro quando sobre o rótulo */
+  cursor: pointer;                       /* Muda o cursor para um ponteiro quando sobre o rótulo */
 }

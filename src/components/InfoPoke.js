@@ -1,14 +1,18 @@
+// Importações necessárias
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom'; 
+import { useParams, Link } from 'react-router-dom';
 import { fetchPokemonById } from '../services/pokeApi';
+import { colors } from '../services/pokeApi.js'; // Importa o objeto de cores
 import { getEffectiveness } from '../services/Efetividade';
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'; // Importe o ícone
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import '../components/css/InfoPoke.css';
 
 const EvoCard = ({ pokemon }) => {
+  const primaryType = pokemon.types[0].toLowerCase(); // Obtém o primeiro tipo e o converte para minúsculas
+  const color = colors[primaryType] || '#D2B48C'; // Define a cor de fundo baseada no primeiro tipo
+
   return (
-    <div className="EvoCard">
-      {/* Use o Link para redirecionar */}
+    <div className="EvoCard" style={{ backgroundColor: color }}> {/* Aplica a cor de fundo */}
       <Link to={`/pokemon/${pokemon.name.toLowerCase()}`}>
         <img src={pokemon.img} alt={pokemon.name} />
         <div>
@@ -45,27 +49,53 @@ const InfoPoke = () => {
           <ArrowCircleLeftIcon className="iconStyle" />
         </Link>
         <span className="nameStyle">{pokemon.name}</span>
-        </h2>
-        <div className="images">
-          <div className="image-container">
-            <img src={pokemon.img} alt={pokemon.name} />
-            <p>Normal</p>
-          </div>
-          <div className="image-container">
+      </h2>
+      <div className="images">
+        <div className="image-container">
+          <img src={pokemon.img} alt={pokemon.name} />
+          <p>Normal</p>
+        </div>
+        <div className="image-container">
           <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokemon.id}.png`} alt={`${pokemon.name} Shiny`} />
           <p>Shiny</p>
         </div>
       </div>
-      <p><strong>ID da Pokedex:</strong> {pokemon.id}</p>
-      <p><strong>Tipo do Pokemon:</strong> {pokemon.types.join(', ')}</p>
-      <p><strong>Altura:</strong> {pokemon.height / 10} m</p>
-      <p><strong>Peso:</strong> {pokemon.weight / 10} kg</p>
-      <p><strong>Habilidades:</strong> {pokemon.abilities.join(', ')}</p>
-      <div className="effectiveness">
-        <p><strong>Fraco contra:</strong> {effectiveness.weak.join(', ')}</p>
-        <p><strong>Forte contra:</strong> {effectiveness.strong.join(', ')}</p>
-        <p><strong>Imune contra:</strong> {effectiveness.immune.join(', ')}</p>
-      </div>
+      <table className="info-table">
+        <tbody>
+          <tr>
+            <td><strong>ID da Pokedex:</strong></td>
+            <td>{pokemon.id}</td>
+          </tr>
+          <tr>
+            <td><strong>Tipo do Pokemon:</strong></td>
+            <td>{pokemon.types.join(', ')}</td>
+          </tr>
+          <tr>
+            <td><strong>Altura:</strong></td>
+            <td>{pokemon.height / 10} m</td>
+          </tr>
+          <tr>
+            <td><strong>Peso:</strong></td>
+            <td>{pokemon.weight / 10} kg</td>
+          </tr>
+          <tr>
+            <td><strong>Habilidades:</strong></td>
+            <td>{pokemon.abilities.join(', ')}</td>
+          </tr>
+          <tr>
+            <td><strong>Forte contra:</strong></td>
+            <td>{effectiveness.strong.join(', ')}</td>
+          </tr>
+          <tr>
+            <td><strong>Fraco contra:</strong></td>
+            <td>{effectiveness.weak.join(', ')}</td>
+          </tr>
+          <tr>
+            <td><strong>Imune contra:</strong></td>
+            <td>{effectiveness.immune.join(', ')}</td>
+          </tr>
+        </tbody>
+      </table>
       <div className="evolution-line">
         <h3>Linha Evolutiva</h3>
         <div className="evolution-cards">

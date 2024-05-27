@@ -1,12 +1,14 @@
 /* ============================== */
 /* Estilos para a Pagina do Poke */
-/* ============================== */ 
+/* ============================== */
+
 .pokemon-details {
   text-align: center;
-  margin: 20px;
+  margin: 10px;
   margin-top: 80px;
-  border: 2px solid #218b13; /* Marrom */
-  border-radius: 20px; /* Bordas arredondadas */
+  border: 2px solid #218b13;
+  border-radius: 20px;
+  padding: 20px; /* Adiciona um pouco de preenchimento para espaço interno */
 }
 
 .pokemon-details .images {
@@ -16,9 +18,12 @@
 }
 
 .pokemon-details .image-container {
+  background-color: #bbbbbb;
   text-align: center;
-  border: 2px solid #8B4513; /* Marrom */
-  border-radius: 20px; /* Bordas arredondadas */}
+  border: 5px solid #8B4513;
+  border-radius: 20px;
+  padding: 10px; /* Adiciona preenchimento */
+}
 
 .pokemon-details .image-container img {
   width: 180px;
@@ -40,10 +45,10 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  border: 2px solid #8B4513; /* Marrom */
-  border-radius: 20px; /* Bordas arredondadas */
-  padding: 10px; /* Espaçamento interno */
-  background-color: #D2B48C; /* Cor de fundo marrom claro */
+  border: 2px solid #8B4513;
+  border-radius: 20px;
+  padding: 10px;
+  /* Remova a cor de fundo estática para ser definida dinamicamente */
 }
 
 .EvoCard img {
@@ -55,36 +60,44 @@
   text-align: center;
 }
 
-/* ------------- */
-/* Cor de Link do card ajustado */
-/* ------------- */
-.EvoCard a:link {
-  color: black;
-  text-decoration: none;
-}
-
-.EvoCard a:visited {
-  color: black;
-  text-decoration: none;
-}
-
-.EvoCard a:hover {
-  color: black;
-  text-decoration: none;
-}
-
+.EvoCard a:link,
+.EvoCard a:visited,
+.EvoCard a:hover,
 .EvoCard a:active {
   color: black;
   text-decoration: none;
 }
 
 .iconStyle {
-  display: flexbox;
   font-size: 40px;
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .nameStyle {
   font-size: 40px;
   margin-right: 10px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-table {
+  margin: 20px auto;
+  border-collapse: collapse;
+  width: 80%;
+  max-width: 600px;
+}
+
+.info-table td {
+  border: 2px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.info-table tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
