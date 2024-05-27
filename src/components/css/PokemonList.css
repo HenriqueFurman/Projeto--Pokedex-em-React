@@ -1,3 +1,6 @@
+/* ============================== */
+/* Estilos para a Container do Poke */
+/* ============================== */ 
 .pokeContainer {
     display: flex;
     flex-wrap: wrap;

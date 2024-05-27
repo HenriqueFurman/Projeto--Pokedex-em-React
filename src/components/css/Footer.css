@@ -1,6 +1,6 @@
 /* ============================== */
 /* Estilos para o Rodape */
-/* ============================== */
+/* ============================== */ 
 :root {
     --color-neutral-0: #0e0c0c;
     --color-neutral-10: rgba(25, 25, 25);
@@ -8,13 +8,26 @@
     --color-neutral-40: #f5f5f5;
 }
 
+* {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    letter-spacing: 1px;
+}
+
+main {
+    height: 80vh;
+}
+
 footer {
     width: 100%;
     color: var(--color-neutral-40);
 }
+
 #footer_logo img {
-    width: 230px;
-    height: auto;
+    width: 230px; /* Ajuste a largura conforme necessário */
+    height: auto; /* Isso garante que a proporção da imagem seja mantida */
 }
 
 .footer-link {
@@ -92,6 +105,7 @@ footer {
     font-weight: 100;
 }
 
+/*Responsividade do Rodape*/
 @media screen and (max-width: 768px) {
     #footer_content {
         grid-template-columns: repeat(2, 1fr);

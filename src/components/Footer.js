@@ -1,11 +1,61 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import './css/Footer.css';
+import Logo from '../img/Logo.png'; // Certifique-se de ajustar o caminho conforme necessário
 
-function Footer() {
+const Footer = () => {
   return (
     <footer>
-      <p>Footer Content</p>
+      <div id="footer_content">
+        <div id="footer_logo">
+          <img src={Logo} alt="Logo" />
+        </div>
+
+        <ul className="footer-list">
+          <li>
+            <h3>Alunos</h3>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">Tales</Link>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">Leonardo</Link>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">Henrique</Link>
+          </li>
+        </ul>
+
+        <ul className="footer-list">
+          <li>
+            <h3>Navegue</h3>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">Início</Link>
+          </li>
+          <li>
+            <Link to="/profile" className="footer-link">Perfil</Link>
+          </li>
+        </ul>
+
+        <ul className="footer-list">
+          <li>
+            <h3>Contatos</h3>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">+55 00 90000-0000</Link>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">IrineuVcNaoSabeNemEu@Email.edu.br</Link>
+          </li>
+        </ul>
+      </div>
+
+      <div id="footer_copyright">
+        &#169; 9000 all rights reserved
+      </div>
     </footer>
   );
-}
+};
 
 export default Footer;
