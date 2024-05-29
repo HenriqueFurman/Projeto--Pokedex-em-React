@@ -37,13 +37,13 @@ const getGeneration = (id) => {
   if (id <= 649) return 5;
   if (id <= 721) return 6;
   if (id <= 809) return 7;
-  if (id <= 898) return 8;
+  if (id <= 905) return 8;
   return 9;
 };
 
 // Função para buscar todos os Pokémons
 export const fetchPokemons = async () => {
-  const pokemonCount = 493;
+  const pokemonCount = 1025;
   const pokemons = [];
 
   for (let i = 1; i <= pokemonCount; i++) {

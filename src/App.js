@@ -44,8 +44,8 @@ function App() {
       5: [494, 649],
       6: [650, 721],
       7: [722, 809],
-      8: [810, 898],
-      9: [899, 1010] // Exemplo para a geração 9
+      8: [810, 905],
+      9: [906, 1025] // Exemplo para a geração 9
     };
     return ranges[gen] || [];
   };
