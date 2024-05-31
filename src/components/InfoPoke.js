@@ -29,6 +29,7 @@ const EvoCard = ({ pokemon }) => {
 const InfoPoke = () => {
   const { id } = useParams(); // Obtém o parâmetro ID da URL
   const [pokemon, setPokemon] = useState(null); // Estado para armazenar os detalhes do Pokémon
+  const [wrapClass, setWrapClass] = useState(''); // Estado para controlar a classe de wrap
 
   useEffect(() => {
     // Função assíncrona para buscar e definir os detalhes do Pokémon
@@ -38,6 +39,14 @@ const InfoPoke = () => {
     };
     getPokemon();
   }, [id]);
+
+  useEffect(() => {
+    if (pokemon && pokemon.evolutions.length > 4) {
+      setWrapClass('wrap');
+    } else {
+      setWrapClass('');
+    }
+  }, [pokemon]);
 
   // Se os detalhes do Pokémon ainda não foram carregados, exibe uma mensagem de carregamento
   if (!pokemon) {
@@ -103,7 +112,7 @@ const InfoPoke = () => {
       </table>
       <div className="evolution-line">
         <h3>Linha Evolutiva</h3>
-        <div className="evolution-cards">
+        <div className={`evolution-cards ${wrapClass}`}>
           {pokemon.evolutions.map((evo, index) => (
             <EvoCard 
               key={index} 
