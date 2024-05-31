@@ -7,6 +7,7 @@ import { getEffectiveness } from '../services/Efetividade';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import '../components/css/InfoPoke.css';
 
+// Componente EvoCard para representar um cartão de evolução
 const EvoCard = ({ pokemon }) => {
   const primaryType = pokemon.types[0].toLowerCase(); // Obtém o primeiro tipo e o converte para minúsculas
   const color = colors[primaryType] || '#D2B48C'; // Define a cor de fundo baseada no primeiro tipo
@@ -24,11 +25,13 @@ const EvoCard = ({ pokemon }) => {
   );
 };
 
+// Componente InfoPoke para exibir os detalhes de um Pokémon específico
 const InfoPoke = () => {
-  const { id } = useParams();
-  const [pokemon, setPokemon] = useState(null);
+  const { id } = useParams(); // Obtém o parâmetro ID da URL
+  const [pokemon, setPokemon] = useState(null); // Estado para armazenar os detalhes do Pokémon
 
   useEffect(() => {
+    // Função assíncrona para buscar e definir os detalhes do Pokémon
     const getPokemon = async () => {
       const data = await fetchPokemonById(id);
       setPokemon(data);
@@ -36,10 +39,12 @@ const InfoPoke = () => {
     getPokemon();
   }, [id]);
 
+  // Se os detalhes do Pokémon ainda não foram carregados, exibe uma mensagem de carregamento
   if (!pokemon) {
     return <div>Loading...</div>;
   }
-
+  
+  // Calcula a efetividade dos tipos do Pokémon
   const effectiveness = getEffectiveness(pokemon.types);
 
   return (

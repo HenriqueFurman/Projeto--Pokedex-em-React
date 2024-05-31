@@ -1,3 +1,5 @@
+
+// Objeto contendo as vantagens e desvantagens de cada tipo de Pokémon
 const typeAdvantages = {
     Normal: { strong: [], weak: ['Fighting'], immune: ['Ghost'] },
     Fire: { strong: ['Bug', 'Grass', 'Ice', 'Steel'], weak: ['Ground', 'Rock', 'Water'], immune: [] },
@@ -18,23 +20,27 @@ const typeAdvantages = {
     Steel: { strong: ['Fairy', 'Ice', 'Rock'], weak: ['Fighting', 'Fire', 'Ground'], immune: ['Poison'] },
     Fairy: { strong: ['Dark', 'Dragon', 'Fighting'], weak: ['Poison', 'Steel'], immune: ['Dragon'] },
   };
-   
+
+  // Função para determinar a efetividade de um conjunto de tipos de Pokémon
   export const getEffectiveness = (types) => {
+    
+    // Objeto que armazena as vantagens, desvantagens e imunidades resultantes
     const effectiveness = { strong: [], weak: [], immune: [] };
   
+    // Itera sobre cada tipo fornecido
     types.forEach(type => {
-      const advantages = typeAdvantages[type];
+      const advantages = typeAdvantages[type];// Obtém as vantagens e desvantagens do tipo atual
       advantages.strong.forEach(t => {
-        if (!effectiveness.strong.includes(t)) effectiveness.strong.push(t);
+        if (!effectiveness.strong.includes(t)) effectiveness.strong.push(t);// Adiciona as vantagens do tipo atual ao objeto de efetividade
       });
       advantages.weak.forEach(t => {
-        if (!effectiveness.weak.includes(t)) effectiveness.weak.push(t);
+        if (!effectiveness.weak.includes(t)) effectiveness.weak.push(t);// Adiciona as desvantagens do tipo atual ao objeto de efetividade
       });
       advantages.immune.forEach(t => {
-        if (!effectiveness.immune.includes(t)) effectiveness.immune.push(t);
+        if (!effectiveness.immune.includes(t)) effectiveness.immune.push(t);// Adiciona as imunidades do tipo atual ao objeto de efetividade
       });
     });
   
-    return effectiveness;
+    return effectiveness;// Retorna o objeto de efetividade resultante
   };
   

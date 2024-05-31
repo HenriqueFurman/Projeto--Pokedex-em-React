@@ -2,6 +2,7 @@
 import React from 'react';
 import './css/Sidebar.css';
 
+// Componente Sidebar que exibe opções para filtrar os Pokémon por tipo
 const Sidebar = ({ isOpen, closeSidebar, types, selectedTypes, toggleType }) => {
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>

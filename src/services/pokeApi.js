@@ -1,8 +1,9 @@
 /* ----------------- */
-// Funçoes do Card Pokemon
+// Funções do Card Pokemon
 /* ----------------- */
 
-export const colors = {  // Adiciona a exportação do objeto colors
+// Objeto contendo as cores correspondentes aos tipos de Pokémon
+export const colors = {
   normal: '#B7B7A8',
   fire: '#FF4422',
   water: '#51A8FF',
@@ -23,12 +24,12 @@ export const colors = {  // Adiciona a exportação do objeto colors
   fairy: '#F1A8F1',
 };
 
-// Função utilitária para capitalizar a primeira letra
+// Função utilitária para capitalizar a primeira letra de uma string
 const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-// Função para determinar a geração do Pokémon
+// Função para determinar a geração do Pokémon com base no seu ID
 const getGeneration = (id) => {
   if (id <= 151) return 1;
   if (id <= 251) return 2;
@@ -39,11 +40,12 @@ const getGeneration = (id) => {
   if (id <= 809) return 7;
   if (id <= 905) return 8;
   return 9;
-};
+};// Retorna o número da geração correspondente ao ID do Pokémon
 
-// Função para buscar todos os Pokémons
-export const fetchPokemons = async () => {
-  const pokemonCount = 1025;
+
+// Função assíncrona para buscar todos os Pokémons da API
+export const fetchPokemons = async () => {  // Busca os dados de cada Pokémon e os organiza em um formato adequado
+  const pokemonCount = 493;
   const pokemons = [];
 
   for (let i = 1; i <= pokemonCount; i++) {
@@ -70,23 +72,25 @@ export const fetchPokemons = async () => {
 // Funçoes da Linha Evolução
 /* ----------------- */
 
-// Função para buscar a cadeia de evolução
+// Função assíncrona para buscar a cadeia de evolução de um Pokémon
 const fetchEvolutionChain = async (url) => {
   const resp = await fetch(url);
   const data = await resp.json();
   return data.chain;
-};
+};  // Busca a cadeia de evolução a partir da URL fornecida
 
-// Função para buscar os tipos de um Pokémon
+
+// Função assíncrona para buscar os tipos de um Pokémon
 const fetchPokemonTypes = async (speciesUrl) => {
   const speciesResp = await fetch(speciesUrl);
   const speciesData = await speciesResp.json();
   const pokemonResp = await fetch(speciesData.varieties[0].pokemon.url);
   const pokemonData = await pokemonResp.json();
   return pokemonData.types.map(type => capitalizeFirstLetter(type.type.name));
-};
+};  // Busca os tipos de um Pokémon a partir da URL da espécie
 
-// Função para obter as evoluções
+
+// Função assíncrona para obter as evoluções de um Pokémon
 const getEvolutions = async (chain) => {
   const evolutions = [];
   const traverseEvolutions = async (node) => {
@@ -109,9 +113,10 @@ const getEvolutions = async (chain) => {
   };
   await traverseEvolutions(chain);
   return evolutions;
-};
+};  // Recursivamente busca e monta a árvore de evoluções do Pokémon
 
-// Função para buscar um Pokémon pelo ID
+
+// Função assíncrona para buscar um Pokémon específico pelo seu ID
 export const fetchPokemonById = async (id) => {
   const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
   const resp = await fetch(url);
@@ -137,4 +142,5 @@ export const fetchPokemonById = async (id) => {
   };
 
   return pokemon;
-};
+};  // Busca os dados de um Pokémon específico e sua cadeia de evolução
+

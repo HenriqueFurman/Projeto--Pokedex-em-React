@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
-import { Pokedex } from './components/PokemonCard'; // Corrigindo a importação do Pokedex
+import { Pokedex } from './components/PokemonCard';
 import Filters from './components/Filters';
 import Footer from './components/Footer';
 import SearchBar from './components/SearchBar';
@@ -16,7 +16,10 @@ import './components/css/PokemonCard.css';
 import './components/css/SearchBar.css';
 import './components/css/Sidebar.css';
 
+// Esta função principal representa o componente principal do aplicativo.
+// Ele gerencia o estado dos Pokémons, termos de pesquisa, tipos selecionados, geração selecionada e o estado de carregamento.
 function App() {
+  // Definição dos estados utilizando o Hook useState
   const [pokemons, setPokemons] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -25,7 +28,7 @@ function App() {
   const [availableGenerations, setAvailableGenerations] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => {  // useEffect utilizado para carregar os Pokémons e definir as gerações disponíveis ao montar o componente.
     fetchPokemons().then(data => {
       setPokemons(data);
       setLoading(false);
@@ -35,6 +38,7 @@ function App() {
     });
   }, []);
 
+  // Função para obter o intervalo de IDs de Pokémon para uma determinada geração.
   const getGenerationRange = (gen) => {
     const ranges = {
       1: [1, 151],
@@ -45,17 +49,18 @@ function App() {
       6: [650, 721],
       7: [722, 809],
       8: [810, 905],
-      9: [906, 1025] // Exemplo para a geração 9
+      9: [906, 1025]
     };
     return ranges[gen] || [];
   };
 
-  const toggleType = (type) => {
+  const toggleType = (type) => {  // Função para alternar a seleção de tipos.
     setSelectedTypes((prevTypes) => 
       prevTypes.includes(type) ? prevTypes.filter(t => t !== type) : [...prevTypes, type]
     );
   };
 
+  // Filtragem dos Pokémons com base nos termos de pesquisa, tipos selecionados e geração selecionada.
   const filteredPokemons = pokemons.filter(pokemon => {
     const matchesSearchTerm = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = selectedTypes.length === 0 || selectedTypes.some(type => pokemon.types.includes(type));
