@@ -16,13 +16,16 @@ const Footer = () => {
             <h3>Alunos</h3>
           </li>
           <li>
-            <Link to="/" className="footer-link">Tales</Link>
+            <Link to="/" className="footer-link">Henrique</Link>
           </li>
           <li>
             <Link to="/" className="footer-link">Leonardo</Link>
           </li>
           <li>
-            <Link to="/" className="footer-link">Henrique</Link>
+            <Link to="/" className="footer-link">Robson</Link>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">Tales</Link>
           </li>
         </ul>
 
