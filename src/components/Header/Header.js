@@ -1,8 +1,9 @@
 import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import ModeNightIcon from '@mui/icons-material/ModeNight'; // Importa o ícone de modo noturno
 
-const Header = ({ setSearchTerm, setSelectedGeneration, availableGenerations, toggleSidebar }) => {
+const Header = ({ setSearchTerm, setSelectedGeneration, availableGenerations, toggleSidebar, toggleDarkMode }) => {
   return (
     <header>
       <div className="search-container">
@@ -11,7 +12,7 @@ const Header = ({ setSearchTerm, setSelectedGeneration, availableGenerations, to
           edge="start"
           color="inherit"
           aria-label="menu"
-          onClick={toggleSidebar} // Adicionado onClick para abrir o sidebar
+          onClick={toggleSidebar}
         >
           <MenuIcon />
         </IconButton>
@@ -45,6 +46,15 @@ const Header = ({ setSearchTerm, setSelectedGeneration, availableGenerations, to
             </li>
           </ul>
         </nav>
+        <IconButton
+          size="large"
+          edge="end"
+          color="inherit"
+          aria-label="dark-mode"
+          onClick={toggleDarkMode}
+        >
+          <ModeNightIcon />
+        </IconButton>
       </div>
     </header>
   );

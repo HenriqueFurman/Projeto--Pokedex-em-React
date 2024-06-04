@@ -7,18 +7,16 @@ import Footer from './components/Footer/Footer';
 import Sidebar from './components/Sidebar/Sidebar';
 import { fetchPokemons } from './services/pokeApi';
 import AppRoutes from './routes/Routes';
+import VLibras from 'vlibras-nextjs';
 import './components/Filters/Filters.css';
 import './components/Footer/Footer.css';
 import './components/Header/Header.css';
 import './components/PokemonCard/PokemonCard.css';
 import './components/SearchBar/SearchBar.css';
 import './components/Sidebar/Sidebar.css';
-import VLibras from '@djpfs/react-vlibras';
+import './acessibilidade/darkMode.css';
 
-// Esta função principal representa o componente principal do aplicativo.
-// Ele gerencia o estado dos Pokémons, termos de pesquisa, tipos selecionados, geração selecionada e o estado de carregamento.
 function App() {
-  // Definição dos estados utilizando o Hook useState
   const [pokemons, setPokemons] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -26,8 +24,9 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [availableGenerations, setAvailableGenerations] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
-  useEffect(() => {  // useEffect utilizado para carregar os Pokémons e definir as gerações disponíveis ao montar o componente.
+  useEffect(() => {
     fetchPokemons().then(data => {
       setPokemons(data);
       setLoading(false);
@@ -36,7 +35,6 @@ function App() {
     });
   }, []);
 
-  // Função para obter o intervalo de IDs de Pokémon para uma determinada geração.
   const getGenerationRange = (gen) => {
     const ranges = {
       1: [1, 151],
@@ -52,13 +50,16 @@ function App() {
     return ranges[gen] || [];
   };
 
-  const toggleType = (type) => {  // Função para alternar a seleção de tipos.
+  const toggleType = (type) => {
     setSelectedTypes((prevTypes) => 
       prevTypes.includes(type) ? prevTypes.filter(t => t !== type) : [...prevTypes, type]
     );
   };
 
-  // Filtragem dos Pokémons com base nos termos de pesquisa, tipos selecionados e geração selecionada.
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
   const filteredPokemons = pokemons.filter(pokemon => {
     const matchesSearchTerm = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = selectedTypes.length === 0 || selectedTypes.some(type => pokemon.types.includes(type));
@@ -72,13 +73,13 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
-        <VLibras forceOnload={true} />
+      <div className={`App ${darkMode ? 'dark-mode' : ''}`}>
         <Header 
           setSearchTerm={setSearchTerm} 
           setSelectedGeneration={setSelectedGeneration} 
           availableGenerations={availableGenerations} 
-          toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+          toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+          toggleDarkMode={toggleDarkMode}
         />
         <Sidebar 
           isOpen={isSidebarOpen} 
@@ -90,6 +91,7 @@ function App() {
         <Filters selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes} />
         <AppRoutes loading={loading} filteredPokemons={filteredPokemons} />
         <Footer />
+        <VLibras forceOnload />
       </div>
     </Router>
   );
