@@ -1,6 +1,6 @@
 // components/Sidebar.js
 import React from 'react';
-import './css/Sidebar.css';
+import './Sidebar.css';
 
 // Componente Sidebar que exibe opções para filtrar os Pokémon por tipo
 const Sidebar = ({ isOpen, closeSidebar, types, selectedTypes, toggleType }) => {

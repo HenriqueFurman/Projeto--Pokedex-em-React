@@ -1,11 +1,11 @@
 // Importações necessárias
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { fetchPokemonById } from '../services/pokeApi';
-import { colors } from '../services/pokeApi.js'; // Importa o objeto de cores
-import { getEffectiveness } from '../services/Efetividade';
+import { fetchPokemonById } from '../../services/pokeApi.js';
+import { colors } from '../../services/pokeApi.js'; // Importa o objeto de cores
+import { getEffectiveness } from '../../services/Efetividade.js';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import '../components/css/InfoPoke.css';
+import './InfoPoke.css';
 
 // Componente EvoCard para representar um cartão de evolução
 const EvoCard = ({ pokemon }) => {

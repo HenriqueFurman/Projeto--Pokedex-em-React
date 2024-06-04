@@ -1,4 +1,3 @@
-
 // Objeto contendo as vantagens e desvantagens de cada tipo de Pokémon
 const typeAdvantages = {
     Normal: { strong: [], weak: ['Fighting'], immune: ['Ghost'] },

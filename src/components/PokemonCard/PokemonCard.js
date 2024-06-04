@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../components/css/PokemonCard.css';
-import { colors } from '../services/pokeApi.js';
+import './PokemonCard.css';
+import { colors } from '../../services/pokeApi.js';
 
 // Componente PokemonCard que representa um cartão de Pokémon
 const PokemonCard = ({ pokemon }) => {

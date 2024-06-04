@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Header from './components/Header';
-import { Pokedex } from './components/PokemonCard';
-import Filters from './components/Filters';
-import Footer from './components/Footer';
-import SearchBar from './components/SearchBar';
-import Sidebar from './components/Sidebar';
-import InfoPoke from './components/InfoPoke';
+import Header from './components/Header/Header';
+import { Pokedex } from './components/PokemonCard/PokemonCard';
+import Filters from './components/Filters/Filters';
+import Footer from './components/Footer/Footer';
+import SearchBar from './components/SearchBar/SearchBar';
+import Sidebar from './components/Sidebar/Sidebar';
+import InfoPoke from './components/InfoPoke/InfoPoke';
 import { fetchPokemons } from './services/pokeApi';
-import './components/css/Filters.css';
-import './components/css/Footer.css';
-import './components/css/Header.css';
-import './components/css/PokemonCard.css';
-import './components/css/SearchBar.css';
-import './components/css/Sidebar.css';
+import './components/Filters/Filters.css';
+import './components/Footer/Footer.css';
+import './components/Header/Header.css';
+import './components/PokemonCard/PokemonCard.css';
+import './components/SearchBar/SearchBar.css';
+import './components/Sidebar/Sidebar.css';
 
 // Esta função principal representa o componente principal do aplicativo.
 // Ele gerencia o estado dos Pokémons, termos de pesquisa, tipos selecionados, geração selecionada e o estado de carregamento.
