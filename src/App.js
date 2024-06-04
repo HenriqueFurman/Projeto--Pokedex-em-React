@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header/Header';
-import { Pokedex } from './components/PokemonCard/PokemonCard';
 import Filters from './components/Filters/Filters';
 import Footer from './components/Footer/Footer';
-import SearchBar from './components/SearchBar/SearchBar';
 import Sidebar from './components/Sidebar/Sidebar';
-import InfoPoke from './components/InfoPoke/InfoPoke';
 import { fetchPokemons } from './services/pokeApi';
+import AppRoutes from './routes/Routes';
 import './components/Filters/Filters.css';
 import './components/Footer/Footer.css';
 import './components/Header/Header.css';
@@ -32,7 +30,6 @@ function App() {
     fetchPokemons().then(data => {
       setPokemons(data);
       setLoading(false);
-
       const generations = [...new Set(data.map(pokemon => pokemon.generation))];
       setAvailableGenerations(generations.sort((a, b) => a - b));
     });
@@ -86,13 +83,10 @@ function App() {
           closeSidebar={() => setIsSidebarOpen(false)} 
           types={pokemonTypes} 
           selectedTypes={selectedTypes} 
-          toggleType={toggleType} // Passando a função toggleType corretamente
+          toggleType={toggleType} 
         />
         <Filters selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes} />
-        <Routes>
-          <Route path="/" element={loading ? <p>Loading...</p> : <Pokedex pokemons={filteredPokemons} />} />
-          <Route path="/pokemon/:id" element={<InfoPoke />} />
-        </Routes>
+        <AppRoutes loading={loading} filteredPokemons={filteredPokemons} />
         <Footer />
       </div>
     </Router>
