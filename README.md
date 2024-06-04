@@ -7,7 +7,6 @@
 - Leonardo
 
 ## Tecnologias Utilizadas
-- **React**
 - **React Router:**         Para gerenciar as rotas do aplicativo.
 - **Material-UI (MUI):**    Para os componentes de interface do usuário.
 - **Axios:**                Para fazer requisições à API de Pokémon.
