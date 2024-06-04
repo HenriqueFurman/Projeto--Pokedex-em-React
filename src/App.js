@@ -13,6 +13,7 @@ import './components/Header/Header.css';
 import './components/PokemonCard/PokemonCard.css';
 import './components/SearchBar/SearchBar.css';
 import './components/Sidebar/Sidebar.css';
+import VLibras from '@djpfs/react-vlibras';
 
 // Esta função principal representa o componente principal do aplicativo.
 // Ele gerencia o estado dos Pokémons, termos de pesquisa, tipos selecionados, geração selecionada e o estado de carregamento.
@@ -72,6 +73,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <VLibras forceOnload={true} />
         <Header 
           setSearchTerm={setSearchTerm} 
           setSelectedGeneration={setSelectedGeneration} 

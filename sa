@@ -1,0 +1,685 @@
+Projeto react Pokedex
+App.js(import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import './App.css';
+import Header from './components/Header/Header';
+import Filters from './components/Filters/Filters';
+import Footer from './components/Footer/Footer';
+import Sidebar from './components/Sidebar/Sidebar';
+import { fetchPokemons } from './services/pokeApi';
+import AppRoutes from './routes/Routes';
+import './components/Filters/Filters.css';
+import './components/Footer/Footer.css';
+import './components/Header/Header.css';
+import './components/PokemonCard/PokemonCard.css';
+import './components/SearchBar/SearchBar.css';
+import './components/Sidebar/Sidebar.css';
+
+// Esta função principal representa o componente principal do aplicativo.
+// Ele gerencia o estado dos Pokémons, termos de pesquisa, tipos selecionados, geração selecionada e o estado de carregamento.
+function App() {
+  // Definição dos estados utilizando o Hook useState
+  const [pokemons, setPokemons] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedGeneration, setSelectedGeneration] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [availableGenerations, setAvailableGenerations] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {  // useEffect utilizado para carregar os Pokémons e definir as gerações disponíveis ao montar o componente.
+    fetchPokemons().then(data => {
+      setPokemons(data);
+      setLoading(false);
+      const generations = [...new Set(data.map(pokemon => pokemon.generation))];
+      setAvailableGenerations(generations.sort((a, b) => a - b));
+    });
+  }, []);
+
+  // Função para obter o intervalo de IDs de Pokémon para uma determinada geração.
+  const getGenerationRange = (gen) => {
+    const ranges = {
+      1: [1, 151],
+      2: [152, 251],
+      3: [252, 386],
+      4: [387, 493],
+      5: [494, 649],
+      6: [650, 721],
+      7: [722, 809],
+      8: [810, 905],
+      9: [906, 1025]
+    };
+    return ranges[gen] || [];
+  };
+
+  const toggleType = (type) => {  // Função para alternar a seleção de tipos.
+    setSelectedTypes((prevTypes) => 
+      prevTypes.includes(type) ? prevTypes.filter(t => t !== type) : [...prevTypes, type]
+    );
+  };
+
+  // Filtragem dos Pokémons com base nos termos de pesquisa, tipos selecionados e geração selecionada.
+  const filteredPokemons = pokemons.filter(pokemon => {
+    const matchesSearchTerm = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = selectedTypes.length === 0 || selectedTypes.some(type => pokemon.types.includes(type));
+    const [start, end] = getGenerationRange(selectedGeneration);
+    const matchesGeneration = selectedGeneration === null || (pokemon.id >= start && pokemon.id <= end);
+
+    return matchesSearchTerm && matchesType && matchesGeneration;
+  });
+
+  const pokemonTypes = [...new Set(pokemons.flatMap(pokemon => pokemon.types))];
+
+  return (
+    <Router>
+      <div className="App">
+        <Header 
+          setSearchTerm={setSearchTerm} 
+          setSelectedGeneration={setSelectedGeneration} 
+          availableGenerations={availableGenerations} 
+          toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+        />
+        <Sidebar 
+          isOpen={isSidebarOpen} 
+          closeSidebar={() => setIsSidebarOpen(false)} 
+          types={pokemonTypes} 
+          selectedTypes={selectedTypes} 
+          toggleType={toggleType} 
+        />
+        <Filters selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes} />
+        <AppRoutes loading={loading} filteredPokemons={filteredPokemons} />
+        <Footer />
+      </div>
+    </Router>
+  );
+}
+
+export default App;
+)
+pokeApi.js(/* ----------------- */
+// Funções do Card Pokemon
+/* ----------------- */
+
+// Objeto contendo as cores correspondentes aos tipos de Pokémon
+export const colors = {
+  normal: '#B7B7A8',
+  fire: '#FF4422',
+  water: '#51A8FF',
+  electric: '#FFD451',
+  grass: '#8BD46E',
+  ice: '#7CD3FF',
+  fighting: '#C56E60',
+  poison: '#B76EA8',
+  ground: '#E2C56E',
+  flying: '#9AA8FF',
+  psychic: '#FF6EA8',
+  bug: '#B7C543',
+  rock: '#C5B67C',
+  ghost: '#7D7DC5',
+  dragon: '#8B7DF1',
+  dark: '#8B6E60',
+  steel: '#B7B7C5',
+  fairy: '#F1A8F1',
+};
+
+// Função utilitária para capitalizar a primeira letra de uma string
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+// Função para determinar a geração do Pokémon com base no seu ID
+const getGeneration = (id) => {
+  if (id <= 151) return 1;
+  if (id <= 251) return 2;
+  if (id <= 386) return 3;
+  if (id <= 493) return 4;
+  if (id <= 649) return 5;
+  if (id <= 721) return 6;
+  if (id <= 809) return 7;
+  if (id <= 905) return 8;
+  return 9;
+};// Retorna o número da geração correspondente ao ID do Pokémon
+
+
+// Função assíncrona para buscar todos os Pokémons da API
+export const fetchPokemons = async () => {  // Busca os dados de cada Pokémon e os organiza em um formato adequado
+  const pokemonCount = 493;
+  const pokemons = [];
+
+  for (let i = 1; i <= pokemonCount; i++) {
+    const url = `https://pokeapi.co/api/v2/pokemon/${i}`;
+    const resp = await fetch(url);
+    const data = await resp.json();
+
+    const pokemon = {
+      id: data.id,
+      name: capitalizeFirstLetter(data.name),
+      types: data.types.map(type => type.type.name),
+      img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.id}.png`,
+      generation: getGeneration(data.id)
+    };
+
+    pokemons.push(pokemon);
+  }
+
+  return pokemons;
+};
+
+
+/* ----------------- */
+// Funçoes da Linha Evolução
+/* ----------------- */
+
+// Função assíncrona para buscar a cadeia de evolução de um Pokémon
+const fetchEvolutionChain = async (url) => {
+  const resp = await fetch(url);
+  const data = await resp.json();
+  return data.chain;
+};  // Busca a cadeia de evolução a partir da URL fornecida
+
+
+// Função assíncrona para buscar os tipos de um Pokémon
+const fetchPokemonTypes = async (speciesUrl) => {
+  const speciesResp = await fetch(speciesUrl);
+  const speciesData = await speciesResp.json();
+  const pokemonResp = await fetch(speciesData.varieties[0].pokemon.url);
+  const pokemonData = await pokemonResp.json();
+  return pokemonData.types.map(type => capitalizeFirstLetter(type.type.name));
+};  // Busca os tipos de um Pokémon a partir da URL da espécie
+
+
+// Função assíncrona para obter as evoluções de um Pokémon
+const getEvolutions = async (chain) => {
+  const evolutions = [];
+  const traverseEvolutions = async (node) => {
+    if (node) {
+      const types = await fetchPokemonTypes(node.species.url);
+      evolutions.push({
+        speciesName: capitalizeFirstLetter(node.species.name),
+        speciesUrl: node.species.url,
+        types: types,
+        evolvesTo: node.evolves_to.map(evo => ({
+          speciesName: capitalizeFirstLetter(evo.species.name),
+          speciesUrl: evo.species.url,
+          minLevel: evo.evolution_details[0]?.min_level || "N/A"
+        }))
+      });
+      for (let evo of node.evolves_to) {
+        await traverseEvolutions(evo);
+      }
+    }
+  };
+  await traverseEvolutions(chain);
+  return evolutions;
+};  // Recursivamente busca e monta a árvore de evoluções do Pokémon
+
+
+// Função assíncrona para buscar um Pokémon específico pelo seu ID
+export const fetchPokemonById = async (id) => {
+  const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+  const resp = await fetch(url);
+  const data = await resp.json();
+
+  const speciesUrl = data.species.url;
+  const speciesResp = await fetch(speciesUrl);
+  const speciesData = await speciesResp.json();
+  const evolutionChainUrl = speciesData.evolution_chain.url;
+  const evolutionChain = await fetchEvolutionChain(evolutionChainUrl);
+  const evolutions = await getEvolutions(evolutionChain);
+
+  const pokemon = {
+    id: data.id,
+    name: capitalizeFirstLetter(data.name),
+    types: data.types.map(type => capitalizeFirstLetter(type.type.name)),
+    img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.id}.png`,
+    generation: getGeneration(data.id),
+    height: data.height,
+    weight: data.weight,
+    abilities: data.abilities.map(ability => capitalizeFirstLetter(ability.ability.name)),
+    evolutions: evolutions
+  };
+
+  return pokemon;
+};  // Busca os dados de um Pokémon específico e sua cadeia de evolução
+
+)
+Efetividade.js(// Objeto contendo as vantagens e desvantagens de cada tipo de Pokémon
+const typeAdvantages = {
+    Normal: { strong: [], weak: ['Fighting'], immune: ['Ghost'] },
+    Fire: { strong: ['Bug', 'Grass', 'Ice', 'Steel'], weak: ['Ground', 'Rock', 'Water'], immune: [] },
+    Water: { strong: ['Fire', 'Ground', 'Rock'], weak: ['Electric', 'Grass'], immune: [] },
+    Electric: { strong: ['Flying', 'Water'], weak: ['Ground'], immune: [] },
+    Grass: { strong: ['Ground', 'Rock', 'Water'], weak: ['Bug', 'Fire', 'Flying', 'Ice', 'Poison'], immune: [] },
+    Ice: { strong: ['Dragon', 'Flying', 'Grass', 'Ground'], weak: ['Fighting', 'Fire', 'Rock', 'Steel'], immune: [] },
+    Fighting: { strong: ['Dark', 'Ice', 'Normal', 'Rock', 'Steel'], weak: ['Fairy', 'Flying', 'Psychic'], immune: [] },
+    Poison: { strong: ['Fairy', 'Grass'], weak: ['Ground', 'Psychic'], immune: [] },
+    Ground: { strong: ['Electric', 'Fire', 'Poison', 'Rock', 'Steel'], weak: ['Ice', 'Grass', 'Water'], immune: ['Electric'] },
+    Flying: { strong: ['Bug', 'Fighting', 'Grass'], weak: ['Electric', 'Ice', 'Rock'], immune: ['Ground'] },
+    Psychic: { strong: ['Fighting', 'Poison'], weak: ['Bug', 'Dark', 'Ghost'], immune: [] },
+    Bug: { strong: ['Dark', 'Grass', 'Psychic'], weak: ['Fire', 'Flying', 'Rock'], immune: [] },
+    Rock: { strong: ['Bug', 'Fire', 'Flying', 'Ice'], weak: ['Fighting', 'Grass', 'Ground', 'Steel', 'Water'], immune: [] },
+    Ghost: { strong: ['Ghost', 'Psychic'], weak: ['Dark', 'Ghost'], immune: ['Normal', 'Fighting'] },
+    Dragon: { strong: ['Dragon'], weak: ['Dragon', 'Fairy', 'Ice'], immune: [] },
+    Dark: { strong: ['Ghost', 'Psychic'], weak: ['Bug', 'Fairy', 'Fighting'], immune: ['Psychic'] },
+    Steel: { strong: ['Fairy', 'Ice', 'Rock'], weak: ['Fighting', 'Fire', 'Ground'], immune: ['Poison'] },
+    Fairy: { strong: ['Dark', 'Dragon', 'Fighting'], weak: ['Poison', 'Steel'], immune: ['Dragon'] },
+  };
+
+  // Função para determinar a efetividade de um conjunto de tipos de Pokémon
+  export const getEffectiveness = (types) => {
+    
+    // Objeto que armazena as vantagens, desvantagens e imunidades resultantes
+    const effectiveness = { strong: [], weak: [], immune: [] };
+  
+    // Itera sobre cada tipo fornecido
+    types.forEach(type => {
+      const advantages = typeAdvantages[type];// Obtém as vantagens e desvantagens do tipo atual
+      advantages.strong.forEach(t => {
+        if (!effectiveness.strong.includes(t)) effectiveness.strong.push(t);// Adiciona as vantagens do tipo atual ao objeto de efetividade
+      });
+      advantages.weak.forEach(t => {
+        if (!effectiveness.weak.includes(t)) effectiveness.weak.push(t);// Adiciona as desvantagens do tipo atual ao objeto de efetividade
+      });
+      advantages.immune.forEach(t => {
+        if (!effectiveness.immune.includes(t)) effectiveness.immune.push(t);// Adiciona as imunidades do tipo atual ao objeto de efetividade
+      });
+    });
+  
+    return effectiveness;// Retorna o objeto de efetividade resultante
+  };
+  )
+Routes.js(import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { Pokedex } from '../components/PokemonCard/PokemonCard';
+import InfoPoke from '../components/InfoPoke/InfoPoke';
+
+const AppRoutes = ({ loading, filteredPokemons }) => {
+  return (
+    <Routes>
+      <Route path="/" element={loading ? <p>Loading...</p> : <Pokedex pokemons={filteredPokemons} />} />
+      <Route path="/pokemon/:id" element={<InfoPoke />} />
+    </Routes>
+  );
+};
+
+export default AppRoutes;
+)
+Sidebar.js(// components/Sidebar.js
+import React from 'react';
+import './Sidebar.css';
+
+// Componente Sidebar que exibe opções para filtrar os Pokémon por tipo
+const Sidebar = ({ isOpen, closeSidebar, types, selectedTypes, toggleType }) => {
+  return (
+    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <button onClick={closeSidebar} className="close-btn">Close</button>
+      <nav>
+        <h3>Filtrar por Tipo</h3>
+        <div className="type-filters">
+          {types.map(type => (
+            <div key={type} className="type-filter">
+              <input
+                type="checkbox"
+                id={type}
+                checked={selectedTypes.includes(type)}
+                onChange={() => toggleType(type)}
+              />
+              <label htmlFor={type}>{type}</label>
+            </div>
+          ))}
+        </div>
+      </nav>
+    </div>
+  );
+};
+
+export default Sidebar;
+)
+SearchBar.js(import React from 'react';
+
+// SearchBar exibe um campo de entrada de texto para pesquisa por nome de pokemon
+function SearchBar() {
+  return (
+    <div>
+      <input type="text" placeholder="Search..." />
+    </div>
+  );
+}
+
+export default SearchBar;
+)
+PokemonCard.js(import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './PokemonCard.css';
+import { colors } from '../../services/pokeApi.js';
+
+// Componente PokemonCard que representa um cartão de Pokémon
+const PokemonCard = ({ pokemon }) => {
+    // Estado para controlar o hover
+    const [isHovered, setIsHovered] = useState(false);
+    const navigate = useNavigate();
+
+    // Função para lidar com o clique no cartão do Pokémon
+    const handleClick = () => {
+        navigate(`/pokemon/${pokemon.id}`);
+    };
+
+    // Obtém a cor do tipo primário do Pokémon ou usa branco como padrão
+    const primaryType = pokemon.types[0];
+    const color = colors[primaryType] || '#FFF';
+
+    return (
+        <div 
+            className="pokemon" 
+            style={{ backgroundColor: color }}
+            onMouseOver={() => setIsHovered(true)}
+            onMouseOut={() => setIsHovered(false)}
+            onClick={handleClick}
+        >
+            <div className="imgContainer" style={{ display: isHovered ? 'none' : 'block' }}>
+                <img src={pokemon.img} alt={pokemon.name} />
+            </div>
+            <div className="info">
+                <span className="number" style={{ display: isHovered ? 'none' : 'block' }}>#{pokemon.id.toString().padStart(3, '0')}</span>
+                <h3 className="name">{pokemon.name}</h3>
+                {isHovered && (
+                    <small className="type">
+                        Generation: {pokemon.generation}<br />
+                        Type: {pokemon.types.join(', ')}
+                    </small>
+                )}
+            </div>
+        </div>
+    );
+};
+
+// Componente Pokedex que representa uma lista de cartões de Pokémon
+export const Pokedex = ({ pokemons }) => {
+    const navigate = useNavigate();
+    
+    // Função para lidar com o clique em um cartão de Pokémon
+    const handleClick = (pokemonId) => {
+        navigate(`/pokemon/${pokemonId}`);
+    };
+
+    return (
+      <div className="pokeContainer">
+        {pokemons.map(pokemon => (
+          <PokemonCard key={pokemon.id} pokemon={pokemon} onClick={() => handleClick(pokemon.id)} />
+        ))}
+      </div>
+    );
+};
+)
+InfoPoke.js(// Importações necessárias
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { fetchPokemonById } from '../../services/pokeApi.js';
+import { colors } from '../../services/pokeApi.js'; // Importa o objeto de cores
+import { getEffectiveness } from '../../services/Efetividade.js';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import './InfoPoke.css';
+
+// Componente EvoCard para representar um cartão de evolução
+const EvoCard = ({ pokemon }) => {
+  const primaryType = pokemon.types[0].toLowerCase(); // Obtém o primeiro tipo e o converte para minúsculas
+  const color = colors[primaryType] || '#D2B48C'; // Define a cor de fundo baseada no primeiro tipo
+
+  return (
+    <div className="EvoCard" style={{ backgroundColor: color }}> {/* Aplica a cor de fundo */}
+      <Link to={`/pokemon/${pokemon.name.toLowerCase()}`}>
+        <img src={pokemon.img} alt={pokemon.name} />
+        <div>
+          <h3>{pokemon.name}</h3>
+          <p>{pokemon.types.join(', ')}</p>
+        </div>
+      </Link>
+    </div>
+  );
+};
+
+// Componente InfoPoke para exibir os detalhes de um Pokémon específico
+const InfoPoke = () => {
+  const { id } = useParams(); // Obtém o parâmetro ID da URL
+  const [pokemon, setPokemon] = useState(null); // Estado para armazenar os detalhes do Pokémon
+  const [wrapClass, setWrapClass] = useState(''); // Estado para controlar a classe de wrap
+
+  useEffect(() => {
+    // Função assíncrona para buscar e definir os detalhes do Pokémon
+    const getPokemon = async () => {
+      const data = await fetchPokemonById(id);
+      setPokemon(data);
+    };
+    getPokemon();
+  }, [id]);
+
+  useEffect(() => {
+    if (pokemon && pokemon.evolutions.length > 4) {
+      setWrapClass('wrap');
+    } else {
+      setWrapClass('');
+    }
+  }, [pokemon]);
+
+  // Se os detalhes do Pokémon ainda não foram carregados, exibe uma mensagem de carregamento
+  if (!pokemon) {
+    return <div>Loading...</div>;
+  }
+  
+  // Calcula a efetividade dos tipos do Pokémon
+  const effectiveness = getEffectiveness(pokemon.types);
+
+  return (
+    <div className="pokemon-details">
+      <h2>
+        <Link to="../">
+          <ArrowCircleLeftIcon className="iconStyle" />
+        </Link>
+        <span className="nameStyle">{pokemon.name}</span>
+      </h2>
+      <div className="images">
+        <div className="image-container">
+          <img src={pokemon.img} alt={pokemon.name} />
+          <p>Normal</p>
+        </div>
+        <div className="image-container">
+          <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokemon.id}.png`} alt={`${pokemon.name} Shiny`} />
+          <p>Shiny</p>
+        </div>
+      </div>
+      <table className="info-table">
+        <tbody>
+          <tr>
+            <td><strong>ID da Pokedex:</strong></td>
+            <td>{pokemon.id}</td>
+          </tr>
+          <tr>
+            <td><strong>Tipo do Pokemon:</strong></td>
+            <td>{pokemon.types.join(', ')}</td>
+          </tr>
+          <tr>
+            <td><strong>Altura:</strong></td>
+            <td>{pokemon.height / 10} m</td>
+          </tr>
+          <tr>
+            <td><strong>Peso:</strong></td>
+            <td>{pokemon.weight / 10} kg</td>
+          </tr>
+          <tr>
+            <td><strong>Habilidades:</strong></td>
+            <td>{pokemon.abilities.join(', ')}</td>
+          </tr>
+          <tr>
+            <td><strong>Forte contra:</strong></td>
+            <td>{effectiveness.strong.join(', ')}</td>
+          </tr>
+          <tr>
+            <td><strong>Fraco contra:</strong></td>
+            <td>{effectiveness.weak.join(', ')}</td>
+          </tr>
+          <tr>
+            <td><strong>Imune contra:</strong></td>
+            <td>{effectiveness.immune.join(', ')}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="evolution-line">
+        <h3>Linha Evolutiva</h3>
+        <div className={`evolution-cards ${wrapClass}`}>
+          {pokemon.evolutions.map((evo, index) => (
+            <EvoCard 
+              key={index} 
+              pokemon={{ 
+                name: evo.speciesName, 
+                img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evo.speciesUrl.split('/')[6]}.png`, 
+                types: evo.types
+              }} 
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default InfoPoke;
+)
+Header.js(import React from 'react';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+
+const Header = ({ setSearchTerm, setSelectedGeneration, availableGenerations, toggleSidebar }) => {
+  return (
+    <header>
+      <div className="search-container">
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={toggleSidebar} // Adicionado onClick para abrir o sidebar
+        >
+          <MenuIcon />
+        </IconButton>
+        <form className="search-form" onSubmit={e => e.preventDefault()}>
+          <div className="search-input-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Qual o Nome do Poke"
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+            <button type="button" className="search-button">Buscar</button>
+          </div>
+        </form>
+        <nav>
+          <ul>
+            <li><a href="/">Início</a></li>
+            <li className="dropdown">
+              <a href="#" className="dropbtn">Geração</a>
+              <div className="dropdown-content">
+                {availableGenerations.map(gen => (
+                  <a
+                    key={gen}
+                    href="#"
+                    onClick={() => setSelectedGeneration(gen)}
+                  >
+                    Geração {gen}
+                  </a>
+                ))}
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+export default Header;
+)
+Footer.js(import React from 'react';
+import { Link } from 'react-router-dom';
+import './Footer.css';
+import Logo from '../../img/Logo.png'; // Certifique-se de ajustar o caminho conforme necessário
+
+const Footer = () => {
+  return (
+    <footer>
+      <div id="footer_content">
+        <div id="footer_logo">
+          <img src={Logo} alt="Logo" />
+        </div>
+
+        <ul className="footer-list">
+          <li>
+            <h3>Alunos</h3>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">Henrique</Link>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">Leonardo</Link>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">Robson</Link>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">Tales</Link>
+          </li>
+        </ul>
+
+        <ul className="footer-list">
+          <li>
+            <h3>Contatos</h3>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">+55 00 90000-0000</Link>
+          </li>
+          <li>
+            <Link to="/" className="footer-link">IrineuVcNaoSabeNemEu@Email.edu.br</Link>
+          </li>
+        </ul>
+      </div>
+
+      <div id="footer_copyright">
+        &#169; 9000 all rights reserved
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
+)
+Filters.js(import React from 'react';
+
+// Componente Filters para exibir os filtros de tipos de Pokémon
+const Filters = ({ selectedTypes, setSelectedTypes }) => {
+  // Lista de todos os tipos de Pokémon
+  const types = ['Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying', 'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy'];
+
+  // Função para lidar com a mudança de seleção de tipo
+  const handleTypeChange = (type) => {
+    setSelectedTypes(prevTypes =>
+      // Adiciona ou remove o tipo da lista de tipos selecionados
+      prevTypes.includes(type) ? prevTypes.filter(t => t !== type) : [...prevTypes, type]
+    );
+  };
+
+  return (
+    <div className="container-filters">
+      <div className="filter-by-type">
+        <span>Tipo</span>
+        {types.map(type => (
+          <div className="group-type" key={type}>
+            <input type="checkbox" name={type} id={type} onChange={() => handleTypeChange(type)} />
+            <label htmlFor={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</label>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Filters;
+)
