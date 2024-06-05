@@ -13,12 +13,12 @@
 - **CSS:**                  Para estilização dos componentes.
 - **Libras:**               Para traduzir tresto em libras.
 
-npm install react-router-dom
-npm install @mui/material @mui/icons-material
-npm install axios
-npm install @emotion/react @emotion/styled
-npm install react-router-dom
-npm i vlibras-nextjs
+- **npm install react-router-dom**
+- **npm install @mui/material @mui/icons-material**
+- **npm install axios**
+- **npm install @emotion/react @emotion/styled**
+- **npm install react-router-dom**
+- **npm i vlibras-nextjs**
 
 
 
