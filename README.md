@@ -13,6 +13,7 @@
 - **CSS:**                  Para estilização dos componentes.
 - **Libras:**               Para traduzir tresto em libras.
 
+## Modulos Utilizados
 - **npm install react-router-dom**
 - **npm install @mui/material @mui/icons-material**
 - **npm install axios**
