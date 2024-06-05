@@ -18,10 +18,7 @@
 - **npm install @mui/material @mui/icons-material**
 - **npm install axios**
 - **npm install @emotion/react @emotion/styled**
-- **npm install react-router-dom**
 - **npm i vlibras-nextjs**
-
-
 
 ## Instalação e Execução
 
